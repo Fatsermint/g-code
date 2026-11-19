@@ -6,22 +6,24 @@ let num =0
 function makeGcode(){
     let Input = textInput.value
     Gcode =""
+    
     fetch("./g-codeForLetters.json")
         .then((response)=> response.json())
         .then((data) =>{
-            for (const char of Input){
+            
+            for (let char of Input){
+                let com = data[char][0].split(",")
                 if (Object.hasOwn(data, char)){
-                    data.array.forEach(element => {
-                        
-                    
-                        Gcode += `${data[char][num]} aaaaa \n`
-                        console.log(Gcode)
-                        showOnParagraph()
-                        num +=1
+                    com.forEach(element => {
+                        console.log(element)
+                        Gcode += `${element} \n`
+                        num = num + 1
                     });
+                    num = 0
                 }
             }
-            num =0
+            
+            showOnParagraph()
         })
     
 
@@ -30,6 +32,6 @@ reloadButton.addEventListener("click", makeGcode)
 function showOnParagraph(){
     alert(Gcode)
 
-    document.getElementById("output").innerHTML = Gcode
+    document.getElementById("output").innerText = Gcode
 
 }
