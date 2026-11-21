@@ -25,11 +25,12 @@ function makeGcode(){
                                 i=-0
                             }if (element.includes(";WR")){
                                 var scaled = scale(element)
+                                Gcode += `${scaled} \n`
                                 i=-0
                             }
                         }
                         console.log(element)
-                        Gcode += `${element} \n`
+                        
                         num = num + 1
                     });
                     num = 0
@@ -51,15 +52,16 @@ function showOnParagraph(){
 function scale(raw){
     let length = raw.length
     let positions = []
-    raw.split("").forEach((char, index) => {
-        if(char === "X" || char === "Y" || char === ";"){
-            positions.push(index)
-            console.log(positions)
-        }
-    });
-    consolo
-    let X = raw.slice((positions[0], positions[1]) * scaleInput.value)
-    let Y = raw.slice(positions[1], positions[2]* scaleInput.value)
-    console.log(X,Y)
-    
+    //raw.split("").forEach((char, index) => {
+    //    if(char === "X" || char === "Y" || char === ";"){
+    //        positions.push(index)
+    //    }
+    //});
+    console.log(raw)
+    let updated = raw.replace(/([XY])\s*([-+]?\d*\.?\d+)/gi, (match, axis, num)=>{
+        const scaledValue = Number(num) * scaleInput.value
+
+        return  `${axis}, ${scaledValue}`
+    })
+    return updated
 }
