@@ -44,6 +44,7 @@ function makeGcode(){
            
             
             showOnParagraph()
+            UpdateDemo()
         })
     
 
@@ -72,10 +73,21 @@ function scale(raw){
     return updated
 }
 function addStart(){
-
+    Gcode += `G28`
     Gcode += `G0 X${startPosX.value} Y${startPosY.value} \n`
     Gcode += `G0 Z10 \n`
     
     Gcode += `G91 \n`
 
+}
+
+
+function UpdateDemo(){
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(300, 150);
+    ctx.stroke();
+    
 }
