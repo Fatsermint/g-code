@@ -2,14 +2,17 @@ const textInput = document.querySelector("#textInput")
 const reloadButton = document.querySelector("#reloadButton")
 const outPut = document.getElementById("output")
 const scaleInput = document.querySelector("#scaleInput")
-const charachterSpace = document.querySelector("#spaceInput")
+const characterSpace = document.querySelector("#spaceInput")
+const startPosX = document.getElementById("startPosX")
+const startPosY = document.getElementById("startPosY")
+
 let Gcode =""
 let num =0
 
 function makeGcode(){
     let Input = textInput.value
     Gcode =""
-    
+    addStart()
     fetch("./g-codeForLetters.json")
         .then((response)=> response.json())
         .then((data) =>{
@@ -36,7 +39,9 @@ function makeGcode(){
                     });
                     num = 0
                 }
+                 Gcode += `G0 X${characterSpace.value} ;BC \n`
             }
+           
             
             showOnParagraph()
         })
@@ -65,4 +70,12 @@ function scale(raw){
         return  better.replaceAll(" ", "")
     })
     return updated
+}
+function addStart(){
+
+    Gcode += `G0 X${startPosX.value} Y${startPosY.value} \n`
+    Gcode += `G0 Z10 \n`
+    
+    Gcode += `G91 \n`
+
 }
