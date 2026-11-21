@@ -25,7 +25,8 @@ function makeGcode(){
                                 i=-0
                             }if (element.includes(";WR")){
                                 var scaled = scale(element)
-                                Gcode += `${scaled} \n`
+                                let perfect = scaled.replaceAll(/,/g, "")
+                                Gcode += `${perfect} \n`
                                 i=-0
                             }
                         }
@@ -60,8 +61,8 @@ function scale(raw){
     console.log(raw)
     let updated = raw.replace(/([XY])\s*([-+]?\d*\.?\d+)/gi, (match, axis, num)=>{
         const scaledValue = Number(num) * scaleInput.value
-
-        return  `${axis}, ${scaledValue}`
+        let better = `${axis}, ${scaledValue}`
+        return  better.replaceAll(" ", "")
     })
     return updated
 }
