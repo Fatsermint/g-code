@@ -1,8 +1,11 @@
 const textInput = document.querySelector("#textInput")
 const reloadButton = document.querySelector("#reloadButton")
 const outPut = document.getElementById("output")
+const scaleInput = document.querySelector("#scaleInput")
+const charachterSpace = document.querySelector("#spaceInput")
 let Gcode =""
 let num =0
+
 function makeGcode(){
     let Input = textInput.value
     Gcode =""
@@ -15,6 +18,16 @@ function makeGcode(){
                 let com = data[char][0].split(",")
                 if (Object.hasOwn(data, char)){
                     com.forEach(element => {
+                        let i = element.length
+                        while (i--){
+                            if (element.includes(";BC")){
+                                
+                                i=-0
+                            }if (element.includes(";WR")){
+                                var scaled = scale(element)
+                                i=-0
+                            }
+                        }
                         console.log(element)
                         Gcode += `${element} \n`
                         num = num + 1
@@ -34,4 +47,19 @@ function showOnParagraph(){
 
     document.getElementById("output").innerText = Gcode
 
+}
+function scale(raw){
+    let length = raw.length
+    let positions = []
+    raw.split("").forEach((char, index) => {
+        if(char === "X" || char === "Y" || char === ";"){
+            positions.push(index)
+            console.log(positions)
+        }
+    });
+    consolo
+    let X = raw.slice((positions[0], positions[1]) * scaleInput.value)
+    let Y = raw.slice(positions[1], positions[2]* scaleInput.value)
+    console.log(X,Y)
+    
 }
