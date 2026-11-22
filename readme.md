@@ -12,6 +12,8 @@ G-code is programming language which most of 3d-printers use
 6. Use the g-code. Use the G-code at your own risk!
 ## Bugs
     -demo doesn't show text very well
+    -Auto copying doesn't always work
+    -Calibrating setting doesn't work with all combos
 ## AI
 I used AI to make all of the characters and I used Ai to help fix couple problems BUT I have made all of the code
 ## Updates

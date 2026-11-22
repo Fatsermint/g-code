@@ -8,6 +8,10 @@ const startPosY = document.getElementById("startPosY")
 const calibrate = document.querySelector("#calibrateCheckBox")
 const copyButton = document.querySelector("#copyButton")
 const autoCopy = document.querySelector("#autoCopy")
+const calibrateX = document.querySelector("#calibrateX")
+const calibrateY = document.querySelector("#calibrateY")
+const calibrateZ = document.querySelector("#calibrateZ")
+
 let Gcode =""
 let num =0
 
@@ -61,7 +65,21 @@ function makeGcode(){
 }
 reloadButton.addEventListener("click", makeGcode)
 copyButton.addEventListener("click", copyGcode)
+calibrate.addEventListener("click",toggleCalibrateShow)
+function toggleCalibrateShow(){
+    if (calibrate.checked == true){
+        calibrateX.style.display = "inline" 
+        calibrateY.style.display = "inline" 
+        calibrateZ.style.display = "inline" 
+
+    }else{
+        calibrateX.style.display = "none" 
+        calibrateY.style.display = "none" 
+        calibrateZ.style.display = "none" 
+    }
+}
 function copyGcode(){
+
     navigator.clipboard.writeText(Gcode)
 }
 function showOnParagraph(){
@@ -83,8 +101,37 @@ function scale(raw){
 }
 function addStart(){
     if (calibrate.checked == true){
-        Gcode += `G28 \n`
+        if (calibrateX.checked == true, calibrateY.checked == true, calibrateZ.checked == true){
+            Gcode += `G28 \n`
+            return
+        }
+        if (calibrateX.checked == true, calibrateY.checked == true){
+            Gcode += `G28 X Y \n`
+            return
+
+
+        }if (calibrateX.checked == true, calibrateZ.checked == true){
+            Gcode += `G28 X Z \n`
+            return
+        }
+        if (calibrateY.checked == true, calibrateZ.checked == true){
+            Gcode += `G28 Y Z \n`
+            return
+        }
+        if (calibrateY.checked == true){
+            Gcode += `G28 Y \n`
+            return
+        }
+        if (calibrateX.checked == true){
+            Gcode += `G28 X \n`
+            return
+        }
+        if (calibrateZ.checked == true){
+            Gcode += `G28 Z \n`
+            return
+        }
     }
+
     Gcode += `G0 X${startPosX.value} Y${startPosY.value} \n`
     Gcode += `G0 Z10 \n`
     Gcode += `G91 \n`
