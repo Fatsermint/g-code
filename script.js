@@ -6,6 +6,8 @@ const characterSpace = document.querySelector("#spaceInput")
 const startPosX = document.getElementById("startPosX")
 const startPosY = document.getElementById("startPosY")
 const calibrate = document.querySelector("#calibrateCheckBox")
+const copyButton = document.querySelector("#copyButton")
+const autoCopy = document.querySelector("#autoCopy")
 let Gcode =""
 let num =0
 
@@ -52,9 +54,16 @@ function makeGcode(){
             showOnParagraph()
         })
     
-
+    
+    
+    
+    if (autoCopy.checked == true) navigator.clipboard.writeText(Gcode)
 }
 reloadButton.addEventListener("click", makeGcode)
+copyButton.addEventListener("click", copyGcode)
+function copyGcode(){
+    navigator.clipboard.writeText(Gcode)
+}
 function showOnParagraph(){
     alert(Gcode)
 
@@ -127,4 +136,6 @@ function UpdateDemo(txt){
 
     }
     ctx.stroke()
+
+
 }
