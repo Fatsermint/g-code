@@ -27,7 +27,13 @@ function makeGcode(){
                                 
                                 i=-0
                             }if (element.includes(";WR")){
-                                var scaled = scale(element)
+                                let writing = false
+                                if (element.includes("Z")){
+                                    writing = !writing
+                                }
+                                
+                                UpdateDemo(element, writing)
+                                let scaled = scale(element)
                                 let perfect = scaled.replaceAll(/,/g, "")
                                 Gcode += `${perfect} \n`
                                 i=-0
@@ -44,7 +50,6 @@ function makeGcode(){
            
             
             showOnParagraph()
-            UpdateDemo()
         })
     
 
@@ -81,13 +86,51 @@ function addStart(){
 
 }
 
+function UpdateDemo(txt, penDown){
+    let relPosX = 0
+    let relPosY = 0
 
-function UpdateDemo(){
+    let Xpos
+    let Ypos
+    if (txt ==null) return
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.lineTo(300, 150);
-    ctx.stroke();
-    
+
+    console.log(txt)
+    let positions = []
+    txt?.split("").forEach((char, index) => {
+        if(char === "X" || char === "Y" || char === ";"){
+            positions.push(index)
+        }
+    });
+
+    if (positions.length >= 3){
+        Xpos = txt.slice(positions[0]+1, positions[1]-1)
+        Ypos = txt.slice(positions[1]+1, positions[2]-1)
+    }else{
+        return
+    }
+
+
+    console.log(Xpos, Ypos)
+    if (penDown == true){
+        alert("i")
+        ctx.beginPath()
+        ctx.moveTo(relPosX, relPosY)
+        ctx.lineTo(10, 100)
+ 
+
+        ctx.lineTo(Xpos, Ypos)
+        ctx.stroke()
+
+
+    }else{
+        relPosX += Xpos
+        relPosY += Ypos
+        alert("haha")
+
+
+    }
+    ctx.stroke()
+
 }
