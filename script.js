@@ -5,12 +5,16 @@ const scaleInput = document.querySelector("#scaleInput")
 const characterSpace = document.querySelector("#spaceInput")
 const startPosX = document.getElementById("startPosX")
 const startPosY = document.getElementById("startPosY")
-
+const calibrate = document.querySelector("#calibrateCheckBox")
 let Gcode =""
 let num =0
 
 function makeGcode(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height)
     let Input = textInput.value
+    relPosX = parseFloat(startPosX.value)
+    relPosY = parseFloat(startPosY.value)
+
     Gcode =""
     addStart()
     fetch("./g-codeForLetters.json")
@@ -35,13 +39,13 @@ function makeGcode(){
                                 i=-0
                             }
                         }
-                        console.log(element)
+                        
                         
                         num = num + 1
                     });
                     num = 0
                 }
-                 Gcode += `G0 X${characterSpace.value} ;BC \n`
+                 Gcode += `G0 X${characterSpace.value} Y0 ;BC \n`
             }
            
             
@@ -60,11 +64,6 @@ function showOnParagraph(){
 function scale(raw){
     let length = raw.length
     let positions = []
-    //raw.split("").forEach((char, index) => {
-    //    if(char === "X" || char === "Y" || char === ";"){
-    //        positions.push(index)
-    //    }
-    //});
     console.log(raw)
     let updated = raw.replace(/([XY])\s*([-+]?\d*\.?\d+)/gi, (match, axis, num)=>{
         const scaledValue = Number(num) * scaleInput.value
@@ -74,30 +73,34 @@ function scale(raw){
     return updated
 }
 function addStart(){
-    Gcode += `G28 \n`
+    if (calibrate.checked == true){
+        Gcode += `G28 \n`
+    }
     Gcode += `G0 X${startPosX.value} Y${startPosY.value} \n`
     Gcode += `G0 Z10 \n`
-    
     Gcode += `G91 \n`
 
 }
 let Xpos = 0
 let Ypos = 0
-let relPosX = parseFloat(startPosX.value)
-let relPosY = parseFloat(startPosY.value)
+let relPosX = 0
+let relPosY = 0
 const canvas = document.getElementById("canvas")
 const ctx = canvas.getContext("2d")
+let writing = false
+
 function UpdateDemo(txt){
-    let writing = false
+    
 
     console.log(txt.includes("Z"))
-    if (txt.includes("Z")){
+    if (txt.includes("Z-10")){
         writing = true
-        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    }
+    if (txt.includes("Z10")){
+        writing = false
     }
 
 
-    console.log(txt)
     let positions = []
     txt?.split("").forEach((char, index) => {
         if(char === "X" || char === "Y" || char === ";"){
@@ -119,13 +122,9 @@ function UpdateDemo(txt){
     //ctx.lineTo(200, 20)
     relPosX += parseFloat(Xpos) 
     relPosY += parseFloat(Ypos)
-    console.log(relPosX, relPosY)
     if (writing == true){
         ctx.lineTo(relPosX, relPosY)
 
     }
-
     ctx.stroke()
-
-
 }
