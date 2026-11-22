@@ -24,15 +24,11 @@ function makeGcode(){
                         let i = element.length
                         while (i--){
                             if (element.includes(";BC")){
-                                
-                                i=-0
-                            }if (element.includes(";WR")){
-                                let writing = false
-                                if (element.includes("Z")){
-                                    writing = !writing
-                                }
-                                
-                                UpdateDemo(element, writing)
+                                UpdateDemo(element)
+                            }
+                            
+                            if (element.includes(";WR")){
+                                UpdateDemo(element)
                                 let scaled = scale(element)
                                 let perfect = scaled.replaceAll(/,/g, "")
                                 Gcode += `${perfect} \n`
@@ -78,23 +74,28 @@ function scale(raw){
     return updated
 }
 function addStart(){
-    Gcode += `G28`
+    Gcode += `G28 \n`
     Gcode += `G0 X${startPosX.value} Y${startPosY.value} \n`
     Gcode += `G0 Z10 \n`
     
     Gcode += `G91 \n`
 
 }
+let Xpos = 0
+let Ypos = 0
+let relPosX = parseFloat(startPosX.value)
+let relPosY = parseFloat(startPosY.value)
+const canvas = document.getElementById("canvas")
+const ctx = canvas.getContext("2d")
+function UpdateDemo(txt){
+    let writing = false
 
-function UpdateDemo(txt, penDown){
-    let relPosX = 0
-    let relPosY = 0
+    console.log(txt.includes("Z"))
+    if (txt.includes("Z")){
+        writing = true
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+    }
 
-    let Xpos
-    let Ypos
-    if (txt ==null) return
-    const canvas = document.getElementById("canvas");
-    const ctx = canvas.getContext("2d");
 
     console.log(txt)
     let positions = []
@@ -107,30 +108,24 @@ function UpdateDemo(txt, penDown){
     if (positions.length >= 3){
         Xpos = txt.slice(positions[0]+1, positions[1]-1)
         Ypos = txt.slice(positions[1]+1, positions[2]-1)
-    }else{
-        return
+    }
+    
+
+
+    console.log("", Xpos, Ypos)
+    ctx.beginPath()
+    ctx.lineWidth = 2
+    ctx.moveTo(relPosX, relPosY)
+    //ctx.lineTo(200, 20)
+    relPosX += parseFloat(Xpos) 
+    relPosY += parseFloat(Ypos)
+    console.log(relPosX, relPosY)
+    if (writing == true){
+        ctx.lineTo(relPosX, relPosY)
+
     }
 
-
-    console.log(Xpos, Ypos)
-    if (penDown == true){
-        alert("i")
-        ctx.beginPath()
-        ctx.moveTo(relPosX, relPosY)
-        ctx.lineTo(10, 100)
- 
-
-        ctx.lineTo(Xpos, Ypos)
-        ctx.stroke()
-
-
-    }else{
-        relPosX += Xpos
-        relPosY += Ypos
-        alert("haha")
-
-
-    }
     ctx.stroke()
+
 
 }
